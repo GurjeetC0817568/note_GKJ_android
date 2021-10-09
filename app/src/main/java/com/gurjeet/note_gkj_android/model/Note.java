@@ -2,7 +2,17 @@ package com.gurjeet.note_gkj_android.model;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
+
+import static androidx.room.ForeignKey.CASCADE;
+
+//added foreign key constraint
+@Entity(tableName = "note", foreignKeys = @ForeignKey(entity = Category.class,
+        parentColumns = "category_id",
+        childColumns = "noteCategoryId",
+        onDelete = CASCADE))
 
 public class Note {
 
