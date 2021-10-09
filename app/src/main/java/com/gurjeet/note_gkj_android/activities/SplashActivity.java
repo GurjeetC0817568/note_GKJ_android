@@ -20,7 +20,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Intent intent = new Intent(SplashActivity.this,
-                        MainActivity.class);
+                        CategoryActivity.class);
                 startActivity(intent);//moving to second activity page
                 finish();
             }
@@ -28,3 +28,4 @@ public class SplashActivity extends AppCompatActivity {
 
     }
 }
+//Reference: https://www.codegrepper.com/code-examples/java/how+to+show+splash+fragment+full+screen+on+android
