@@ -1,8 +1,10 @@
-package com.gurjeet.note_gkj_android;
+package com.gurjeet.note_gkj_android.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.gurjeet.note_gkj_android.R;
 
 public class MainActivity extends AppCompatActivity {
 
