@@ -105,10 +105,36 @@ public class CategoryActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             holder.categoryNameTV.setText(categoryList.get(position).getCatName());
+
+            // goto notes of clicked category
             holder.categoryNameTV.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                 //TODO: will add notepage intent here
+                    //open notes page of clicked category
+                    Intent intent = new Intent(getBaseContext(), NoteActivity.class);
+                    intent.putExtra(NoteActivity.CATEGORY_ID, categoryList.get(position).getCatId());
+                    intent.putExtra(NoteActivity.CATEGORY_NAME, categoryList.get(position).getCatName());
+                    startActivity(intent);
+                }
+            });
+
+            // delete category
+            //Reference: https://stackoverflow.com/questions/26076965/android-recyclerview-addition-removal-of-items
+            holder.categoryNameTV.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(CategoryActivity.this);
+                    builder.setTitle("Delete this Category?");
+                    builder.setPositiveButton("Yes", (dialog, which) -> {
+                        noteViewModel.deleteCategory(categoryList.get(position).getCatId());
+                        // Toast.makeText(CategoryActivity.this, "The category  is  deleted", Toast.LENGTH_SHORT).show();
+                    });
+                    builder.setNegativeButton("No", (dialog, which) -> {
+                        //do nothing when clicked No
+                    });
+                    androidx.appcompat.app.AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                    return false;
                 }
             });
 
@@ -133,7 +159,6 @@ public class CategoryActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(CategoryActivity.this);
         builder.setTitle("Message!");
         builder.setMessage(message);
-
         builder.setCancelable(false);
         builder.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
             @Override
