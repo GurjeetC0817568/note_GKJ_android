@@ -1,4 +1,4 @@
-package com.gurjeet.note_gkj_android.data;
+package com.gurjeet.note_gkj_android.model;
 
 import android.app.Application;
 
@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.gurjeet.note_gkj_android.data.NoteRepository;
 import com.gurjeet.note_gkj_android.model.Category;
 import com.gurjeet.note_gkj_android.model.Note;
 
