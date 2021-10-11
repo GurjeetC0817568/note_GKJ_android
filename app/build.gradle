@@ -41,6 +41,12 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     annotationProcessor 'androidx.room:room-compiler:2.3.0'
 
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.google.android.gms:play-services-maps:17.0.1'
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
+    implementation 'com.google.maps.android:android-maps-utils:0.4+'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
+
     // swipe row
     implementation 'it.xabaras.android:recyclerview-swipedecorator:1.2.3'
     // Room components
