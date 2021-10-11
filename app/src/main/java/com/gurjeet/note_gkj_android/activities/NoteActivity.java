@@ -1,26 +1,38 @@
 package com.gurjeet.note_gkj_android.activities;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.gurjeet.note_gkj_android.R;
+import com.gurjeet.note_gkj_android.model.Category;
 import com.gurjeet.note_gkj_android.model.Note;
 import com.gurjeet.note_gkj_android.model.NoteViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class NoteActivity extends AppCompatActivity {
 
@@ -92,6 +104,48 @@ public class NoteActivity extends AppCompatActivity {
         });
     }
     /************Ends notes list with sort option***************************/
+
+
+    /************Starts Left Right Swipe Part***************************/
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+            int position = viewHolder.getAdapterPosition();
+
+            switch (direction) {
+                //Delete task when left swipe
+                case ItemTouchHelper.LEFT:
+                    AlertDialog.Builder builderl = new AlertDialog.Builder(NoteActivity.this);
+                    builderl.setTitle("You sure to delete this note?");
+
+                    //when click yes then delete
+                    builderl.setPositiveButton("Yes", (dialog, which) -> {
+                        noteAppViewModel.delete(noteList.get(position));
+                    });
+                    //when click No then do nothing
+                    builderl.setNegativeButton("No", (dialog, which) -> noteAdapter.notifyDataSetChanged());
+                    AlertDialog alertDialog = builderl.create();
+                    alertDialog.show();
+                    break;
+                //move category part when right swipe
+                case ItemTouchHelper.RIGHT:
+            }
+        }
+
+
+
+
+
+    };
+    /************Ends Left Right Swipe Part***************************/
+
 
     /************Starts NoteAdapter part***************************/
 
