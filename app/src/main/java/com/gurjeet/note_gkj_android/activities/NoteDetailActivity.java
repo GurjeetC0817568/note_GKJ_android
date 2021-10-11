@@ -9,6 +9,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -93,6 +94,17 @@ public class NoteDetailActivity extends AppCompatActivity {
         locationDetailsTV = findViewById(R.id.locationDetailsTV);
         mapIcon = findViewById(R.id.mapIcon);
 
+        /*****************Start upload image click*********************/
+        uploadImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGE_CODE);
+                } else {
+                    pickImageFromGalary();//if permission allowed then pick image
+                }
+            }
+        });
 
 
 
@@ -140,6 +152,16 @@ public class NoteDetailActivity extends AppCompatActivity {
 
     }
     /********************ON CREATE FUNCTIONS ENDS HERE*******************/
+
+    //Reference: https://stackoverflow.com/questions/5309190/android-pick-images-from-gallery
+    private void pickImageFromGalary() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        //TODO: activity result launcher code here
+    }
+
+
     //when activity resume is complete
     @Override
     protected void onPostResume() {
@@ -271,8 +293,11 @@ public class NoteDetailActivity extends AppCompatActivity {
             }else{
                 startUpdateLocation();
             }
+        } else if (requestCode == READ_EXTERNAL_STORAGE_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                pickImageFromGalary();
+            }
         }
-        //TODO: may need to add permission for images upload part
     }
     /************** Ends permissions  methods **************************/
 
