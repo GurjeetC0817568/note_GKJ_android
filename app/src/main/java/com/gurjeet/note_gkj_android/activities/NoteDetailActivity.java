@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -23,7 +24,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -136,7 +140,25 @@ public class NoteDetailActivity extends AppCompatActivity {
 
     }
     /********************ON CREATE FUNCTIONS ENDS HERE*******************/
+    //when activity resume is complete
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
 
+        int errorCode = GoogleApiAvailability.getInstance()
+                .isGooglePlayServicesAvailable(this);
+
+        if (errorCode != ConnectionResult.SUCCESS) {
+            Dialog errorDialog = GoogleApiAvailability.getInstance()
+                    .getErrorDialog(this, errorCode, errorCode, new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            Toast.makeText(NoteDetailActivity.this, "Google Services Not Available", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+            errorDialog.show();
+        }
+    }
 
     /************** Start location related methods **************************/
     @SuppressLint("MissingPermission")
