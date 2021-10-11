@@ -176,12 +176,16 @@ public class NoteDetailActivity extends AppCompatActivity {
                         double latitude = 40.7589;
                         double longitude = -73.9851;
                         addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-                        String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                        String city = addresses.get(0).getLocality();
-                        String state = addresses.get(0).getAdminArea();
-                        String country = addresses.get(0).getCountryName();
-                        String postalCode = addresses.get(0).getPostalCode()
-                        locationDetailsTV.setText(address+city+state);
+
+                        if (addresses != null && addresses.size() > 0) {
+                            String address = "";
+                            address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                            address += addresses.get(0).getLocality();
+                            address += addresses.get(0).getAdminArea();
+                            address += addresses.get(0).getCountryName();
+                            address += addresses.get(0).getPostalCode()
+                            locationDetailsTV.setText(address);
+                        }
 
                     } catch (Exception e) {
                         e.printStackTrace(); // catch the error
