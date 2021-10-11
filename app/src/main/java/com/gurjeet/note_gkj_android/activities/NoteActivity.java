@@ -63,7 +63,17 @@ public class NoteActivity extends AppCompatActivity {
         });
 
 
+        //Sort option variable
+        sortAZ = findViewById(R.id.sortAZ);
+        sortZA = findViewById(R.id.sortZA);
+        sortDate = findViewById(R.id.sortDate);
+        //setting asc,desc,date wise sort option for each variable
+        sortAZ.setOnClickListener(v -> getNoteLists(true, false, false));
+        sortZA.setOnClickListener(v -> getNoteLists(false, true, false));
+        sortDate.setOnClickListener(v -> getNoteLists(false, false, true));
 
+        noteAppViewModel = new ViewModelProvider.AndroidViewModelFactory(this.getApplication())
+                .create(NoteViewModel.class);
 
         // back button click to go back
         findViewById(R.id.imgBack).setOnClickListener(v -> {
@@ -72,6 +82,16 @@ public class NoteActivity extends AppCompatActivity {
 
 
     }
+
+    /************Starts notes list with sort option***************************/
+    public void getNoteLists(boolean isAsc, boolean isDesc, boolean byDate) {
+        noteAppViewModel.getNotesByCategory(catId, isAsc, isDesc, searchKey, byDate).observe(this, notes -> {
+            noteList.clear();
+            noteList.addAll(notes);
+            noteAdapter.notifyDataSetChanged();
+        });
+    }
+    /************Ends notes list with sort option***************************/
 
     /************Starts NoteAdapter part***************************/
 
