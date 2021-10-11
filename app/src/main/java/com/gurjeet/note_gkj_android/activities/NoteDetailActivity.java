@@ -226,9 +226,26 @@ public class NoteDetailActivity extends AppCompatActivity {
                 startUpdateLocation();
             }
         }
+        //TODO: may need to add permission for images upload part
     }
     /************** Ends permissions  methods **************************/
 
+
+    // alert box function
+    public void alertBox(String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(NoteDetailActivity.this);
+        builder.setTitle("Message!");
+        builder.setMessage(message);
+
+        builder.setCancelable(false);
+        builder.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+    }
 
 
 
