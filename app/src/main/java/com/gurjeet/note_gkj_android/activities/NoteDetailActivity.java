@@ -153,6 +153,7 @@ public class NoteDetailActivity extends AppCompatActivity {
         startUpdateLocation();
     }
 
+    List<Address> addresses;
     @SuppressLint("MissingPermission")
     private void startUpdateLocation() {
         locationRequest = LocationRequest.create();
@@ -160,35 +161,40 @@ public class NoteDetailActivity extends AppCompatActivity {
         locationRequest.setInterval(UPDATE_INTERVAL);
         locationRequest.setFastestInterval(FASTEST_INTERVAL);
         locationRequest.setSmallestDisplacement(SMALLEST_DISPLACEMENT);
+
         locationCallback = new LocationCallback() {
+
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
-                geocoder = new Geocoder(getApplicationContext(), Locale.getDefault()); // sets the geocoder object
+                geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
 
                 if (locationResult != null) {
                     Location location = locationResult.getLastLocation();
                     try {
                         //Reference:https://stackoverflow.com/questions/9409195/how-to-get-complete-address-from-latitude-and-longitude
-                        //TODO: testing code then will use it
-                        List<Address> addresses;
-                        geocoder = new Geocoder(this, Locale.getDefault());
-                        double latitude = 40.7589;
-                        double longitude = -73.9851;
-                        addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-
-                        if (addresses != null && addresses.size() > 0) {
-                            String address = "";
-                            address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                            address += addresses.get(0).getLocality();
-                            address += addresses.get(0).getAdminArea();
-                            address += addresses.get(0).getCountryName();
-                            address += addresses.get(0).getPostalCode()
-                            locationDetailsTV.setText(address);
+                        if(latLangNote == null){
+                            latLangNote = new LatLng(location.getLatitude(), location.getLongitude());
                         }
 
+                        addresses = geocoder.getFromLocation(latLangNote.latitude, latLangNote.longitude, 1);// Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                        String address = "";
+                        if (addresses != null && addresses.size() > 0) {
+                            if (addresses.get(0).getThoroughfare() != null)
+                                address += addresses.get(0).getThoroughfare() + ", "; // street
+                            if (addresses.get(0).getPostalCode() != null)
+                                address += addresses.get(0).getPostalCode() + ", "; // postal code
+                            if (addresses.get(0).getLocality() != null)
+                                address += addresses.get(0).getLocality() + ", "; // city
+                            if (addresses.get(0).getAdminArea() != null)
+                                address += addresses.get(0).getAdminArea(); // province
+
+                        }
+
+                        // adding address in textview
+                        locationDetailsTV.setText(address);
                     } catch (Exception e) {
-                        e.printStackTrace(); // catch the error
+                        e.printStackTrace();
                     }
                 }
             }
