@@ -4,6 +4,172 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/innerbackground"
     tools:context=".activities.NoteDetailActivity">
+
+
+    <ImageView
+        android:id="@+id/uploadImage"
+        android:layout_width="100dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/upload"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.903"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <EditText
+        android:id="@+id/titleET"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="30dp"
+        android:background="#FFFFFF"
+        android:ems="5"
+        android:hint="Enter note title"
+        android:inputType="textPersonName"
+        android:padding="4dp"
+        android:textColorHint="#7C4605"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/uploadImage" />
+
+
+    <View
+        android:id="@+id/audioBannerV"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="30dp"
+        android:background="#450C0C0C"
+        android:clickable="false"
+        android:contextClickable="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detailET" />
+
+    <EditText
+        android:id="@+id/detailET"
+        android:layout_width="0dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="30dp"
+        android:background="#FFFFFF"
+        android:ems="5"
+        android:gravity="top"
+        android:hint="Enter note details"
+        android:inputType="textPersonName"
+        android:paddingLeft="4dp"
+        android:paddingTop="4dp"
+        android:textColorHint="#7C4605"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleET" />
+
+    <ImageView
+        android:id="@+id/backBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="9dp"
+        android:src="@drawable/back"
+        android:text="back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/edit_noteTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
+        android:text="Record"
+        android:textColor="#7C4605"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/audioBannerV"
+        app:layout_constraintTop_toTopOf="@+id/audioBannerV" />
+
+    <ImageButton
+        android:id="@+id/recorderBtn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:background="#00FFFFFF"
+        app:layout_constraintBottom_toBottomOf="@+id/audioBannerV"
+        app:layout_constraintStart_toEndOf="@+id/edit_noteTitle"
+        app:layout_constraintTop_toTopOf="@+id/audioBannerV"
+        app:layout_constraintVertical_bias="0.541"
+        app:srcCompat="@drawable/record" />
+
+    <SeekBar
+        android:id="@+id/scrubberSld"
+        android:layout_width="132dp"
+        android:layout_height="17dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toEndOf="@+id/recorderBtn"
+        app:layout_constraintTop_toTopOf="@+id/audioBannerV" />
+
+    <ImageButton
+        android:id="@+id/playerBtn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="12dp"
+        android:background="#00FFFFFF"
+        app:layout_constraintEnd_toEndOf="@+id/audioBannerV"
+        app:layout_constraintTop_toTopOf="@+id/audioBannerV"
+        app:srcCompat="@drawable/play" />
+
+    <TextView
+        android:id="@+id/locationDetailsTV"
+        android:layout_width="284dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="30dp"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textColor="#7C4605"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/audioBannerV" />
+
+    <TextView
+        android:id="@+id/saveTV"
+        android:layout_width="108dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="72dp"
+        android:background="#7C4605"
+        android:text="Save Note"
+        android:textAlignment="center"
+        android:textColor="#F8F6F6"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/mapIcon" />
+
+    <ImageView
+        android:id="@+id/mapIcon"
+        android:layout_width="55dp"
+        android:layout_height="58dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/audioBannerV"
+        app:srcCompat="@drawable/map"
+        app:tint="#7C4605" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
