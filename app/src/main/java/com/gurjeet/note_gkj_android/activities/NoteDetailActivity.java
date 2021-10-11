@@ -7,11 +7,13 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -38,9 +40,12 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.gurjeet.note_gkj_android.R;
+import com.gurjeet.note_gkj_android.model.Note;
+import com.gurjeet.note_gkj_android.model.NoteViewModel;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -62,6 +67,8 @@ public class NoteDetailActivity extends AppCompatActivity {
     Geocoder geocoder;
     LatLng latLangNote = null;
 
+    private NoteViewModel noteAppViewModel;
+    ArrayList<Note> noteList = new ArrayList<>();
 
     //variables set
     ImageButton btnPlay, btnRecord;
@@ -185,6 +192,13 @@ public class NoteDetailActivity extends AppCompatActivity {
             }
         });
         /**************Ends scrubber function here**************/
+
+        // set the audio volume using streamVolume
+        audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
+
+        noteAppViewModel = new ViewModelProvider.AndroidViewModelFactory(this.getApplication()).create(NoteViewModel.class);
+
         // Reference:https://stackoverflow.com/questions/62613424/java-solution-for-startactivityforresultintent-int-in-fragment-has-been-depre
         myActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -210,6 +224,8 @@ public class NoteDetailActivity extends AppCompatActivity {
         else
             startUpdateLocation();
 
+        //location initializer
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
     }
     /********************ON CREATE FUNCTIONS ENDS HERE*******************/
 
@@ -251,6 +267,7 @@ public class NoteDetailActivity extends AppCompatActivity {
         mediaRecorder.setOutputFile(pathSave);
 
     }
+
 
     /************** Start location related methods **************************/
     @SuppressLint("MissingPermission")
