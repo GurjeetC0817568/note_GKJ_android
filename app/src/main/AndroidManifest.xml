@@ -14,10 +14,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Note_GKJ_android">
+        <activity android:name=".activities.MapsActivity"></activity>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="google_maps_key" />
-        <activity android:name=".activities.NoteDetailActivity"></activity>
+
+        <activity android:name=".activities.NoteDetailActivity" />
         <activity android:name=".activities.NoteActivity" />
         <activity android:name=".activities.CategoryActivity" />
         <activity android:name=".activities.SplashActivity">
