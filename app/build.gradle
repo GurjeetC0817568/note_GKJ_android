@@ -47,6 +47,10 @@ dependencies {
     implementation 'com.google.maps.android:android-maps-utils:0.4+'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
 
+    //Reference:https://stackoverflow.com/questions/21134326/cannot-import-com-google-android-gms-maps-model-latlng-in-android-studio/41242498
+    compile "com.google.android.gms:play-services-maps:10.0.1"
+
+
     // swipe row
     implementation 'it.xabaras.android:recyclerview-swipedecorator:1.2.3'
     // Room components
