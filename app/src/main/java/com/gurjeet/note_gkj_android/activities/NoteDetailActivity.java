@@ -15,6 +15,9 @@ import android.widget.TextView;
 
 import com.gurjeet.note_gkj_android.R;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class NoteDetailActivity extends AppCompatActivity {
 
     //variables set
@@ -48,5 +51,41 @@ public class NoteDetailActivity extends AppCompatActivity {
         mapIcon = findViewById(R.id.mapIcon);
 
 
+
+
+        /**************Starts scrubber function here**************/
+
+        //Reference: https://stackoverflow.com/questions/40031333/android-audio-seekbar-delay
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                    scrubber.setProgress(mediaPlayer.getCurrentPosition());
+            }
+        }, 0, 300);
+
+
+        scrubber.setVisibility(View.GONE);
+        scrubber.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mediaPlayer.seekTo(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        /**************Ends scrubber function here**************/
+
+
     }
+
+
+
 }
