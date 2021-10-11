@@ -161,6 +161,54 @@ public class NoteDetailActivity extends AppCompatActivity {
         });
 
 
+        /**************audio clicked for play icons**************/
+        //Reference:https://www.tutlane.com/tutorial/android/android-audio-media-player-with-examples
+        btnPlay.setVisibility(View.GONE);
+        btnPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isPlaying) {
+                    btnRecord.setEnabled(false);
+
+                    mediaPlayer = new MediaPlayer();
+                    try {
+                        mediaPlayer.setDataSource(pathSave);
+                        mediaPlayer.prepare();
+                        scrubber.setProgress(0);
+                        scrubber.setMax(mediaPlayer.getDuration());
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    mediaPlayer.start();
+                    audioBannerV.setBackgroundColor(Color.parseColor("#450C0C0C"));
+                    btnPlay.setImageResource(R.drawable.pause);
+
+                    Toast.makeText(NoteDetailActivity.this, "Playing...", Toast.LENGTH_SHORT).show();
+
+                    mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mp) {
+                            btnRecord.setEnabled(true);
+                            btnPlay.setImageResource(R.drawable.play);
+                            audioBannerV.setBackgroundResource(R.color.white);
+                            scrubber.setProgress(0);
+                        }
+                    });
+                } else {
+                    //if playing
+                    btnRecord.setEnabled(true);
+                    mediaPlayer.pause();
+                    audioBannerV.setBackgroundResource(R.color.material_on_surface_disabled);
+                    btnPlay.setImageResource(R.drawable.play);
+                }
+                isPlaying = !isPlaying;
+            }
+        });
+
+
+
 
 
         /**************Starts scrubber function here**************/
