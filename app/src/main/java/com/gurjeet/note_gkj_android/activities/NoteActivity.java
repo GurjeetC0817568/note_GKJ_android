@@ -136,15 +136,19 @@ public class NoteActivity extends AppCompatActivity {
                     break;
                 //move category part when right swipe
                 case ItemTouchHelper.RIGHT:
+                    //TODO: create move popup dialog and then do the right swipe for moving notes
+                    break;
+
+
             }
         }
 
 
 
-
-
     };
     /************Ends Left Right Swipe Part***************************/
+
+
 
 
     /************Starts NoteAdapter part***************************/

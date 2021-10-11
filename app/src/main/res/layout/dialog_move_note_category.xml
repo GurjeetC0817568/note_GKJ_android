@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#450C0C0C"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/textChangeCat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Change Category"
+        android:textColor="@color/black"
+        android:textSize="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView81"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Categories"
+        android:textColor="@color/black"
+        android:textSize="18dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textChangeCat" />
+
+    <Spinner
+        android:id="@+id/otherCategoriesSp"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/white"
+        android:bottomLeftRadius="15dp"
+        android:bottomRightRadius="15dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:theme="@android:style/Theme.Light"
+        android:topLeftRadius="15dp"
+        android:topRightRadius="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/textView81"
+        app:layout_constraintTop_toBottomOf="@+id/textView81" />
+
+    <Button
+        android:id="@+id/btnChangeCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="24dp"
+        android:background="#7C4605"
+        app:backgroundTint="#BB7F36"
+        android:paddingHorizontal="30dp"
+        android:text="Change"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/otherCategoriesSp" />
+</androidx.constraintlayout.widget.ConstraintLayout>
