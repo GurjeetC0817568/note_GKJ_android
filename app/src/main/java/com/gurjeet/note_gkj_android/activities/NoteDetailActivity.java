@@ -69,6 +69,7 @@ public class NoteDetailActivity extends AppCompatActivity {
     private List<String> permissions = new ArrayList<>();
     private List<String> permissionsRejected = new ArrayList<>();
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,20 +179,26 @@ public class NoteDetailActivity extends AppCompatActivity {
     }
     /************** Ends location related methods **************************/
 
+
+
+    /************** Start permissions  methods **************************/
     @RequiresApi(api = Build.VERSION_CODES.M)
     private List<String> permissionsToRequest(List<String> permissions) {
         ArrayList<String> results = new ArrayList<>();
         for (String perm : permissions) {
+            if (!hasPermission(perm))
                 results.add(perm);
         }
 
         return results;
     }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     private boolean hasPermission(String perm) {
         return checkSelfPermission(perm) == PackageManager.PERMISSION_GRANTED;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -220,4 +227,9 @@ public class NoteDetailActivity extends AppCompatActivity {
             }
         }
     }
+    /************** Ends permissions  methods **************************/
+
+
+
+
 }
