@@ -1,5 +1,9 @@
 package com.gurjeet.note_gkj_android.activities;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -66,6 +70,9 @@ public class NoteDetailActivity extends AppCompatActivity {
     MediaRecorder mediaRecorder;
     SeekBar scrubber;
     MediaPlayer mediaPlayer;
+    Boolean imageSet = false;
+
+    ActivityResultLauncher<Intent> myActivityResultLauncher;
 
     private static final int FASTEST_INTERVAL = 1000; // 1 seconds
     private static final int UPDATE_INTERVAL = 5000; // 5 seconds
@@ -137,7 +144,19 @@ public class NoteDetailActivity extends AppCompatActivity {
             }
         });
         /**************Ends scrubber function here**************/
+        // Reference:https://stackoverflow.com/questions/62613424/java-solution-for-startactivityforresultintent-int-in-fragment-has-been-depre
+        myActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == RESULT_OK) {
+                            Intent data = result.getData();
 
+                            uploadImage.setImageURI(data.getData());
+                            imageSet = true;
+                        }
+                    }
+                });
 
         // added permissions
         permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -158,7 +177,7 @@ public class NoteDetailActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        //TODO: activity result launcher code here
+        myActivityResultLauncher.launch(intent);
     }
 
 
