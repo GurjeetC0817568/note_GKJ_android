@@ -15,6 +15,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -41,11 +42,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.gurjeet.note_gkj_android.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 
 public class NoteDetailActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -70,7 +73,9 @@ public class NoteDetailActivity extends AppCompatActivity {
     MediaRecorder mediaRecorder;
     SeekBar scrubber;
     MediaPlayer mediaPlayer;
-    Boolean imageSet = false;
+
+    String pathSave = "", recordFile = null;
+    Boolean isRecording = false, isPlaying = false, imageSet = false;
 
     ActivityResultLauncher<Intent> myActivityResultLauncher;
 
@@ -112,6 +117,42 @@ public class NoteDetailActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+
+        /**************when record button clicked**************/
+        //Reference: https://stackoverflow.com/questions/37338606/mediarecorder-not-saving-audio-to-file
+        btnRecord.setOnClickListener(v -> {
+            if (!isRecording) {
+                if (hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) && hasPermission(Manifest.permission.RECORD_AUDIO)) {
+                    recordFile = "/" + UUID.randomUUID().toString() + ".3gp";
+                    pathSave = getExternalCacheDir().getAbsolutePath()  + recordFile ;
+                    setUpMediaRecorder();
+
+                    try {
+                        mediaRecorder.prepare();
+                        mediaRecorder.start();
+                        audioBannerV.setBackgroundColor(Color.parseColor("#FF7C4605"));
+                        btnPlay.setEnabled(false);
+                        btnPlay.setVisibility(View.GONE);
+                        scrubber.setVisibility(View.GONE);
+
+                        Toast.makeText(NoteDetailActivity.this, "Recording started...", Toast.LENGTH_SHORT).show();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                mediaRecorder.stop();
+                btnPlay.setEnabled(true);
+                btnPlay.setVisibility(View.VISIBLE);
+                scrubber.setVisibility(View.VISIBLE);
+                audioBannerV.setBackgroundResource(R.color.teal_700);
+            }
+            isRecording = !isRecording;
+        });
+
 
 
 
@@ -199,6 +240,16 @@ public class NoteDetailActivity extends AppCompatActivity {
                     });
             errorDialog.show();
         }
+    }
+
+    //problem solved using reference:https://stackoverflow.com/questions/58311691/the-android-app-crashes-after-6-seconds-when-i-press-record-button
+    private void setUpMediaRecorder() {
+        mediaRecorder = new MediaRecorder();
+        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+        mediaRecorder.setOutputFile(pathSave);
+
     }
 
     /************** Start location related methods **************************/
