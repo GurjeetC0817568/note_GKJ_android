@@ -7,18 +7,15 @@
     android:background="@drawable/innerbackground"
     tools:context=".activities.NoteActivity">
 
-    <TextView
+    <ImageView
         android:id="@+id/headingnoteTV"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:gravity="center"
-        android:text="Notes"
-        android:textSize="24sp"
-        android:textStyle="bold"
+        android:layout_width="329dp"
+        android:layout_height="61dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.012"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/notestop" />
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"

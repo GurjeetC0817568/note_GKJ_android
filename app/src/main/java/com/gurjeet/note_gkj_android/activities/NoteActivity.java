@@ -36,17 +36,16 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 public class NoteActivity extends AppCompatActivity {
 
-    ImageView createNote;
+    ImageView createNote, goBack;
     RecyclerView rcvNotes;
     TextView sortAZ, sortZA, sortDate;
     SearchView searchView;
 
-    private NoteViewModel noteAppViewModel;
     ArrayList<Note> noteList = new ArrayList<>();
     List<Category> selectedCategory = new ArrayList<>();
     List<String> catSpinnerArr= new ArrayList<>();
 
-
+    private NoteViewModel noteAppViewModel;
     private NoteAdapter noteAdapter;
     private int catId;
     private String searchKey = "";
@@ -59,13 +58,17 @@ public class NoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
 
+        //All variables assigning
+        sortAZ = findViewById(R.id.sortAZ);
+        sortZA = findViewById(R.id.sortZA);
+        sortDate = findViewById(R.id.sortDate);
         createNote = findViewById(R.id.createNote);
         searchView = findViewById(R.id.searchView);
         rcvNotes = findViewById(R.id.rcvNotes);
+        goBack = findViewById(R.id.imgBack);
 
         //to not change the size of recycler view when change in adapter content
         rcvNotes.setHasFixedSize(true);
-
         catId = getIntent().getIntExtra(NoteActivity.CATEGORY_ID, 0);
 
         //by clicking move to detail activity page
@@ -76,10 +79,6 @@ public class NoteActivity extends AppCompatActivity {
         });
 
 
-        //Sort option variable
-        sortAZ = findViewById(R.id.sortAZ);
-        sortZA = findViewById(R.id.sortZA);
-        sortDate = findViewById(R.id.sortDate);
         //setting asc,desc,date wise sort option for each variable
         sortAZ.setOnClickListener(v -> getNoteLists(true, false, false));
         sortZA.setOnClickListener(v -> getNoteLists(false, true, false));
@@ -89,7 +88,7 @@ public class NoteActivity extends AppCompatActivity {
                 .create(NoteViewModel.class);
 
         // back button click to go back
-        findViewById(R.id.imgBack).setOnClickListener(v -> {
+        goBack.setOnClickListener(v -> {
             finish();
         });
 
@@ -216,7 +215,6 @@ public class NoteActivity extends AppCompatActivity {
                     });
             }
         }
-
 
 
     };
