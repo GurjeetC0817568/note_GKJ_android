@@ -371,6 +371,32 @@ public class NoteDetailActivity extends AppCompatActivity {
 
         //location initializer
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+
+        /**************location icon click to show map activity***********/
+        locationDetailsTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(NoteDetailActivity.this, MapsActivity.class);
+                intent.putExtra("note_longitude", latLangNote.longitude);
+                intent.putExtra("note_latitude",  latLangNote.latitude);
+                startActivity(intent);
+            }
+        });
+
+        /**************mapIcon click to show map activity**************/
+        mapIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(NoteDetailActivity.this, MapsActivity.class);
+                intent.putExtra("note_longitude", latLangNote.longitude);
+                intent.putExtra("note_latitude",  latLangNote.latitude);
+                startActivity(intent);
+            }
+        });
+
+
+
     }
     /********************ON CREATE FUNCTIONS ENDS HERE*******************/
 
