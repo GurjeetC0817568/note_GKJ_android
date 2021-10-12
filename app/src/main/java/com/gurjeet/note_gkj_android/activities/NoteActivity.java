@@ -43,7 +43,8 @@ public class NoteActivity extends AppCompatActivity {
 
     private NoteViewModel noteAppViewModel;
     ArrayList<Note> noteList = new ArrayList<>();
-    ArrayList<Note> filteredList = new ArrayList<>();
+    List<Category> selectedCategory = new ArrayList<>();
+    List<String> catSpinnerArr= new ArrayList<>();
 
 
     private NoteAdapter noteAdapter;
@@ -164,7 +165,54 @@ public class NoteActivity extends AppCompatActivity {
                 //move category part when right swipe
                 case ItemTouchHelper.RIGHT:
                     noteAppViewModel.getAllCategories().observe(NoteActivity.this, categories -> {
-                    //minor issue in this part
+                        if (categories.size() == 1){
+                            //move function will not work if there is only one category
+                            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(NoteActivity.this);
+                            builder.setTitle("Warning! can not possible!");
+                            builder.setMessage("There is one category only");
+                            builder.setCancelable(false);
+                            builder.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            builder.create().show();
+
+                        }else{
+                            //if more than 1 categories then update the note's categoryId in note table
+                            selectedCategory = categories;
+                            for (Category category :categories){
+                                catSpinnerArr.add(category.getCatName());
+                            }
+                            AlertDialog.Builder builder = new AlertDialog.Builder(NoteActivity.this);
+                            LayoutInflater layoutInflater = LayoutInflater.from(NoteActivity.this);
+                            View view = layoutInflater.inflate(R.layout.dialog_move_note_category, null);
+                            builder.setView(view);
+                            final AlertDialog alertDialogr = builder.create();
+                            alertDialogr.show();
+
+                            //Reference:https://stackoverflow.com/questions/6485158/custom-style-setdropdownviewresource-android-spinner/22178862
+                            //Reference: https://stackoverflow.com/questions/40261501/how-to-set-same-appearance-for-spinner-in-xml-design
+                            Spinner otherCategoriesSp = view.findViewById(R.id.otherCategoriesSp);
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, catSpinnerArr);
+                            adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+                            otherCategoriesSp.setAdapter(adapter);
+
+                            //when popup dialog box's button click after selecting new category
+                            Button btnChangeCat = view.findViewById(R.id.btnChangeCategory);
+                            btnChangeCat.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    final Note noteToUpdate = noteList.get(position);
+                                    final Category categoryToUpdate = selectedCategory.get(otherCategoriesSp.getSelectedItemPosition());
+                                    //set note's category id to new categoryId in note table
+                                    noteToUpdate.setNoteCategoryId(categoryToUpdate.getCatId());
+                                    noteAppViewModel.update(noteToUpdate);
+                                    alertDialogr.dismiss();
+                                }
+                            });
+                        }
                     });
             }
         }
