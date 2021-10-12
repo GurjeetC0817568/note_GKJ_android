@@ -17,7 +17,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -47,8 +49,13 @@ import com.gurjeet.note_gkj_android.R;
 import com.gurjeet.note_gkj_android.model.Note;
 import com.gurjeet.note_gkj_android.model.NoteViewModel;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
@@ -81,6 +88,8 @@ public class NoteDetailActivity extends AppCompatActivity {
     SeekBar scrubber;
     MediaPlayer mediaPlayer;
 
+    private int catID = 0;
+    private int noteId = 0;
     String pathSave = "", recordFile = null;
     Boolean isRecording = false, isPlaying = false, imageSet = false;
 
@@ -208,7 +217,46 @@ public class NoteDetailActivity extends AppCompatActivity {
         });
 
 
+        catID = getIntent().getIntExtra(NoteActivity.CATEGORY_ID, 0);
+        noteId = getIntent().getIntExtra("note_id", -1) ;
 
+
+        /**************Save button click for add **************/
+        saveTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String title = titleET.getText().toString().trim();
+                String detail = detailET.getText().toString().trim();
+
+                //setting date format
+                Date date = Calendar.getInstance().getTime();
+                DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy hh:mm aa");
+                String strDate = dateFormat.format(date);
+
+
+                if (title.isEmpty() || detail.isEmpty()) {
+                    alertBox("Enter both note title and description!");
+                } else {
+                    byte[] imageInByte = null;
+                    if(imageSet){
+                        // bitmap to jpeg converter
+                        //Reference: https://stackoverflow.com/questions/20329090/how-to-convert-a-bitmap-to-a-jpeg-file-in-android
+
+                        Bitmap bitmap = ((BitmapDrawable) uploadImage.getDrawable()).getBitmap();
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, baos);
+                        imageInByte = baos.toByteArray();
+                    }
+
+
+                    //add note
+                    noteAppViewModel.insertNote(new Note(catID, title, detail, recordFile , latLangNote.latitude ,latLangNote.longitude,  imageInByte,strDate));
+                    finish();
+                }
+            }
+        });
+        /**************Ends save button click for both add and update**************/
 
 
         /**************Starts scrubber function here**************/
