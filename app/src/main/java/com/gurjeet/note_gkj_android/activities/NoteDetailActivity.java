@@ -268,6 +268,7 @@ public class NoteDetailActivity extends AppCompatActivity {
                 if (title.isEmpty() || detail.isEmpty()) {
                     alertBox("Enter both note title and description!");
                 } else {
+
                     byte[] imageInByte = null;
                     if(imageSet){
                         // bitmap to jpeg converter
@@ -279,9 +280,27 @@ public class NoteDetailActivity extends AppCompatActivity {
                         imageInByte = baos.toByteArray();
                     }
 
+                    if(noteId > 0){
+                        //update note
+                        byte[] finalImageInByte = imageInByte;
+                        noteAppViewModel.getNoteById(noteId).observe(NoteDetailActivity.this, note -> {
+                            note.setNoteCategoryId(note.getNoteCategoryId());
+                            note.setNoteName(title);
+                            note.setNoteDetail(detail);
+                            note.setNoteLatitude(latLangNote.latitude);
+                            note.setNoteLongitude(latLangNote.longitude);
+                            if(recordFile != null)
+                                note.setNoteRecordingPath(recordFile);
+                            if(imageSet){
+                                note.setNoteImage(finalImageInByte);
+                            }
+                            noteAppViewModel.update(note);
+                        });
 
-                    //add note
-                    noteAppViewModel.insertNote(new Note(catID, title, detail, recordFile , latLangNote.latitude ,latLangNote.longitude,  imageInByte,strDate));
+                    }else{
+                        //add note
+                        noteAppViewModel.insertNote(new Note(catID, title, detail, recordFile , latLangNote.latitude ,latLangNote.longitude,  imageInByte,strDate));
+                    }
                     finish();
                 }
             }
