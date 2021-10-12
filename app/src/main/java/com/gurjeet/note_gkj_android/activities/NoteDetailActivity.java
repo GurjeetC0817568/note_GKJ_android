@@ -1,14 +1,5 @@
 package com.gurjeet.note_gkj_android.activities;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -30,6 +21,7 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -37,6 +29,15 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -47,9 +48,11 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
+
+
 import com.gurjeet.note_gkj_android.R;
-import com.gurjeet.note_gkj_android.model.Note;
 import com.gurjeet.note_gkj_android.model.NoteViewModel;
+import com.gurjeet.note_gkj_android.model.Note;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -64,7 +67,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
+
 public class NoteDetailActivity extends AppCompatActivity {
+
     private static final String TAG = "MainActivity";
     private static final int REQUEST_CODE = 1;
     public static final int READ_EXTERNAL_STORAGE_CODE = 2;
@@ -97,6 +102,7 @@ public class NoteDetailActivity extends AppCompatActivity {
 
     ActivityResultLauncher<Intent> myActivityResultLauncher;
 
+
     private static final int FASTEST_INTERVAL = 1000; // 1 seconds
     private static final int UPDATE_INTERVAL = 5000; // 5 seconds
     private static final int SMALLEST_DISPLACEMENT = 200; // 200 meters
@@ -104,6 +110,9 @@ public class NoteDetailActivity extends AppCompatActivity {
     private List<String> permissionsToRequest;
     private List<String> permissions = new ArrayList<>();
     private List<String> permissionsRejected = new ArrayList<>();
+
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -129,6 +138,8 @@ public class NoteDetailActivity extends AppCompatActivity {
         btnBack.setOnClickListener(v -> {
             finish();
         });
+
+
 
         /*****************Start upload image click*********************/
         uploadImage.setOnClickListener(new View.OnClickListener() {
@@ -178,6 +189,7 @@ public class NoteDetailActivity extends AppCompatActivity {
         });
 
 
+
         /**************audio clicked for play icons**************/
         //Reference:https://www.tutlane.com/tutorial/android/android-audio-media-player-with-examples
         btnPlay.setVisibility(View.GONE);
@@ -225,6 +237,7 @@ public class NoteDetailActivity extends AppCompatActivity {
         });
 
 
+
         catID = getIntent().getIntExtra(NoteActivity.CATEGORY_ID, 0);
         noteId = getIntent().getIntExtra("note_id", -1) ;
 
@@ -243,15 +256,14 @@ public class NoteDetailActivity extends AppCompatActivity {
             byte[] imgBitmapArray = getIntent().getByteArrayExtra("note_image");
             if(imgBitmapArray != null){
                 //Create drawable from bitmap
-                Drawable image = new BitmapDrawable(getResources(), BitmapFactory.decodeByteArray(imgBitmapArray, 0, imgBitmapArray.length));
+                Drawable image = new BitmapDrawable(getResources(),BitmapFactory.decodeByteArray(imgBitmapArray, 0, imgBitmapArray.length));
                 uploadImage.setImageDrawable(image);
                 imageSet = true;
             }
         }
 
 
-
-        /**************Save button click for add **************/
+        /**************Save button click for both add and update**************/
         saveTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -267,8 +279,7 @@ public class NoteDetailActivity extends AppCompatActivity {
 
                 if (title.isEmpty() || detail.isEmpty()) {
                     alertBox("Enter both note title and description!");
-                } else {
-
+                }else {
                     byte[] imageInByte = null;
                     if(imageSet){
                         // bitmap to jpeg converter
@@ -314,7 +325,9 @@ public class NoteDetailActivity extends AppCompatActivity {
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
+                if (isPlaying && mediaPlayer != null) {
                     scrubber.setProgress(mediaPlayer.getCurrentPosition());
+                }
             }
         }, 0, 300);
 
@@ -338,6 +351,8 @@ public class NoteDetailActivity extends AppCompatActivity {
         });
         /**************Ends scrubber function here**************/
 
+
+
         // set the audio volume using streamVolume
         audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
@@ -358,6 +373,10 @@ public class NoteDetailActivity extends AppCompatActivity {
                     }
                 });
 
+
+        // set location initializer
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
         // added permissions
         permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         permissions.add(Manifest.permission.RECORD_AUDIO);
@@ -368,9 +387,6 @@ public class NoteDetailActivity extends AppCompatActivity {
             requestPermissions(permissionsToRequest.toArray(new String[permissionsToRequest.size()]), REQUEST_CODE);
         else
             startUpdateLocation();
-
-        //location initializer
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
 
         /**************location icon click to show map activity***********/
@@ -408,7 +424,6 @@ public class NoteDetailActivity extends AppCompatActivity {
         myActivityResultLauncher.launch(intent);
     }
 
-
     //when activity resume is complete
     @Override
     protected void onPostResume() {
@@ -426,6 +441,8 @@ public class NoteDetailActivity extends AppCompatActivity {
                         }
                     });
             errorDialog.show();
+        } else {
+//            findLocation();
         }
     }
 
@@ -506,7 +523,6 @@ public class NoteDetailActivity extends AppCompatActivity {
     /************** Ends location related methods **************************/
 
 
-
     /************** Start permissions  methods **************************/
     @RequiresApi(api = Build.VERSION_CODES.M)
     private List<String> permissionsToRequest(List<String> permissions) {
@@ -575,7 +591,6 @@ public class NoteDetailActivity extends AppCompatActivity {
         });
         builder.create().show();
     }
-
 
 
 }

@@ -31,8 +31,8 @@ import com.gurjeet.note_gkj_android.model.NoteViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
+
 
 public class NoteActivity extends AppCompatActivity {
 
@@ -45,7 +45,7 @@ public class NoteActivity extends AppCompatActivity {
     ArrayList<Note> noteList = new ArrayList<>();
     ArrayList<Note> filteredList = new ArrayList<>();
 
-    //TODO: Adapter need to create
+
     private NoteAdapter noteAdapter;
     private int catId;
     private String searchKey = "";
@@ -95,6 +95,7 @@ public class NoteActivity extends AppCompatActivity {
 
     }
 
+
     /************Starts notes list with sort option***************************/
     public void getNoteLists(boolean isAsc, boolean isDesc, boolean byDate) {
         noteAppViewModel.getNotesByCategory(catId, isAsc, isDesc, searchKey, byDate).observe(this, notes -> {
@@ -105,6 +106,32 @@ public class NoteActivity extends AppCompatActivity {
     }
     /************Ends notes list with sort option***************************/
 
+
+    /************Start onResume during search***************************/
+    @Override
+    protected void onResume() {//restart the activity with onResume method
+        super.onResume();
+
+        noteAdapter = new NoteAdapter(this, noteList);
+        rcvNotes.setAdapter(noteAdapter);
+
+        getNoteLists(true, false, false);
+        searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchKey = newText;
+                getNoteLists(true, false, false);
+                return false;
+            }
+        });
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(rcvNotes);
+    }
+    /************Ends onResume during search***************************/
 
     /************Starts Left Right Swipe Part***************************/
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -136,10 +163,9 @@ public class NoteActivity extends AppCompatActivity {
                     break;
                 //move category part when right swipe
                 case ItemTouchHelper.RIGHT:
-                    //TODO: create move popup dialog and then do the right swipe for moving notes
-                    break;
-
-
+                    noteAppViewModel.getAllCategories().observe(NoteActivity.this, categories -> {
+                    //minor issue in this part
+                    });
             }
         }
 
@@ -147,8 +173,6 @@ public class NoteActivity extends AppCompatActivity {
 
     };
     /************Ends Left Right Swipe Part***************************/
-
-
 
 
     /************Starts NoteAdapter part***************************/
@@ -219,6 +243,5 @@ public class NoteActivity extends AppCompatActivity {
         }
     }
     /************Ends NoteAdapter part***************************/
-
 
 }
