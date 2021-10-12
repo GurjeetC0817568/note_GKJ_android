@@ -18,8 +18,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -225,6 +227,28 @@ public class NoteDetailActivity extends AppCompatActivity {
 
         catID = getIntent().getIntExtra(NoteActivity.CATEGORY_ID, 0);
         noteId = getIntent().getIntExtra("note_id", -1) ;
+
+        //when update, display note,detail,recorded file,image from previous page using intent
+        if(noteId  > 0){
+            latLangNote = new LatLng(getIntent().getDoubleExtra("note_latitude" , 0), getIntent().getDoubleExtra("note_longitude" , 0));
+            titleET.setText(getIntent().getStringExtra("note_name"));
+            detailET.setText(getIntent().getStringExtra("note_detail"));
+
+            recordFile = getIntent().getStringExtra("note_audio_path");
+            if(recordFile != null){
+                pathSave  = getExternalCacheDir().getAbsolutePath() + recordFile;
+                btnPlay.setVisibility(View.VISIBLE);
+                scrubber.setVisibility(View.VISIBLE);
+            }
+            byte[] imgBitmapArray = getIntent().getByteArrayExtra("note_image");
+            if(imgBitmapArray != null){
+                //Create drawable from bitmap
+                Drawable image = new BitmapDrawable(getResources(), BitmapFactory.decodeByteArray(imgBitmapArray, 0, imgBitmapArray.length));
+                uploadImage.setImageDrawable(image);
+                imageSet = true;
+            }
+        }
+
 
 
         /**************Save button click for add **************/
