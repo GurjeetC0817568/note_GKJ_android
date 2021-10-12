@@ -122,6 +122,12 @@ public class NoteDetailActivity extends AppCompatActivity {
         locationDetailsTV = findViewById(R.id.locationDetailsTV);
         mapIcon = findViewById(R.id.mapIcon);
 
+
+        // when back button click then go back
+        btnBack.setOnClickListener(v -> {
+            finish();
+        });
+
         /*****************Start upload image click*********************/
         uploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
