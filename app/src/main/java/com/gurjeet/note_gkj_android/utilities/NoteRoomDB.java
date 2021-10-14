@@ -48,10 +48,9 @@ public abstract class NoteRoomDB extends RoomDatabase {
                         NoteDao noteDao = INSTANCE.noteDao();
                         noteDao.deleteAll();
 
-                        Category cat = new Category("Shopping");
-                        noteDao.insertCategory(cat);
-                        //int id=noteDao.getCatId();
-                        //Log.i(TAG, "Category Id " + position);
+                       // Category cat = new Category("Shopping");
+                       // noteDao.insertCategory(cat);
+
 
                     });
                 }

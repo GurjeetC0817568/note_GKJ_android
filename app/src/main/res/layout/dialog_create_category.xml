@@ -3,16 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#450C0C0C"
+    android:background="#94BB7F36"
     android:padding="16dp">
 
     <TextView
         android:id="@+id/txtLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="160dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="161dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
         android:text="Add Category"
         android:textColor="@color/black"
         android:textSize="24dp"

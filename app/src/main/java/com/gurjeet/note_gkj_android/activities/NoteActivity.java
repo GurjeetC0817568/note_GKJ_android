@@ -3,6 +3,9 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -211,15 +214,62 @@ public class NoteActivity extends AppCompatActivity {
                                     alertDialogr.dismiss();
                                 }
                             });
-                        }
+                        }//else part ended when more than 1 category
                     });
             }
         }
 
 
+        /*
+        // not working due to old version of swipe api so images are not showing
+      @Override
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView
+                recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY,
+                                int actionState, boolean isCurrentlyActive) {
+            new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                    .setIconHorizontalMargin(1, 1)
+                    .addSwipeLeftActionIcon(R.drawable.delete)
+                    .addSwipeRightActionIcon(R.drawable.move)
+                    .create()
+                    .decorate();
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        }*/
+
+
+        @Override
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView
+                recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY,
+                                int actionState, boolean isCurrentlyActive) {
+            if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                View itemView = viewHolder.itemView;
+                Paint p = new Paint();
+                if (dX > 0) {
+                    p.setARGB(85, 0, 255, 0);//Setting background
+                    c.drawRect((float) itemView.getLeft(), (float) itemView.getTop(), dX, (float) itemView.getBottom(), p);
+                    RectF rightButton = new RectF(itemView.getLeft() , itemView.getTop(), itemView.getLeft()+100, itemView.getBottom());
+                    drawText(" Move", c, rightButton, p);//Showing text on swipe
+                } else if (dX == 0) {}//when no swipe then do nothing
+                else {
+                    RectF rightButton = new RectF(itemView.getRight() , itemView.getTop(), itemView.getRight()-100, itemView.getBottom());
+                    drawText("Delete ", c, rightButton, p);//Showing text on swipe
+                    p.setARGB(105, 255, 0, 0);//Setting background
+                    c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom(), p);
+                }
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+        }
+
     };
     /************Ends Left Right Swipe Part***************************/
 
+    private void drawText(String text, Canvas c, RectF button, Paint p) {
+        float textSize = 30;
+        p.setColor(Color.WHITE);
+        p.setAntiAlias(true);
+        p.setTextSize(textSize);
+        float textWidth = p.measureText(text);
+        c.drawText(text, button.centerX() - (textWidth / 2), button.centerY() + (textSize / 2), p);
+    }
 
     /************Starts NoteAdapter part***************************/
 
