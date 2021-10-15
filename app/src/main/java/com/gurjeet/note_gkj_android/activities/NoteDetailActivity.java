@@ -252,7 +252,7 @@ public class NoteDetailActivity extends AppCompatActivity {
             latLangNote = new LatLng(latID, lngID);
             titleET.setText(getIntent().getStringExtra("note_name"));
             detailET.setText(getIntent().getStringExtra("note_detail"));
-            onCreateDateShow.setText("Create On : " + getIntent().getStringExtra("note_created_date"));
+            onCreateDateShow.setText("Created On : " + getIntent().getStringExtra("note_created_date"));
 
             recordFile = getIntent().getStringExtra("note_audio_path");
             if(recordFile != null){

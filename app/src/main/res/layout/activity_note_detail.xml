@@ -175,7 +175,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="17dp"
         android:layout_marginEnd="30dp"
-        android:textColor="#9A7C4605"
+        android:textColor="#D87C4605"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
