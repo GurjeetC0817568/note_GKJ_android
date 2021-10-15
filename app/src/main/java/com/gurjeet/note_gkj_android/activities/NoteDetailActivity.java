@@ -70,10 +70,8 @@ import java.util.UUID;
 
 public class NoteDetailActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
     private static final int REQUEST_CODE = 1;
     public static final int READ_EXTERNAL_STORAGE_CODE = 2;
-
 
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationRequest locationRequest;
@@ -86,7 +84,7 @@ public class NoteDetailActivity extends AppCompatActivity {
 
     //variables set
     ImageButton btnPlay, btnRecord;
-    TextView locationDetailsTV,saveTV;
+    TextView locationDetailsTV,saveTV,onCreateDateShow;
     ImageView btnBack, uploadImage, mapIcon;
     View audioBannerV;
     EditText titleET, detailET;
@@ -94,9 +92,8 @@ public class NoteDetailActivity extends AppCompatActivity {
     MediaRecorder mediaRecorder;
     SeekBar scrubber;
     MediaPlayer mediaPlayer;
-
-    private int catID = 0;
-    private int noteId = 0;
+    private int catID = 0, noteId = 0;
+    private double latID = 0 ,lngID = 0;
     String pathSave = "", recordFile = null;
     Boolean isRecording = false, isPlaying = false, imageSet = false;
 
@@ -132,12 +129,14 @@ public class NoteDetailActivity extends AppCompatActivity {
         scrubber = findViewById(R.id.scrubber);
         locationDetailsTV = findViewById(R.id.locationDetailsTV);
         mapIcon = findViewById(R.id.mapIcon);
-
+        onCreateDateShow = findViewById(R.id.onCreateDateShow);
 
         // when back button click then go back
         btnBack.setOnClickListener(v -> {
             finish();
         });
+
+
 
 
 
@@ -152,6 +151,8 @@ public class NoteDetailActivity extends AppCompatActivity {
                 }
             }
         });
+
+
 
 
 
@@ -187,6 +188,9 @@ public class NoteDetailActivity extends AppCompatActivity {
             }
             isRecording = !isRecording;
         });
+
+
+
 
 
 
@@ -240,12 +244,15 @@ public class NoteDetailActivity extends AppCompatActivity {
 
         catID = getIntent().getIntExtra(NoteActivity.CATEGORY_ID, 0);
         noteId = getIntent().getIntExtra("note_id", -1) ;
+        latID = getIntent().getDoubleExtra("note_latitude" , 0);
+        lngID = getIntent().getDoubleExtra("note_longitude" , 0);
 
         //when update, display note,detail,recorded file,image from previous page using intent
         if(noteId  > 0){
-            latLangNote = new LatLng(getIntent().getDoubleExtra("note_latitude" , 0), getIntent().getDoubleExtra("note_longitude" , 0));
+            latLangNote = new LatLng(latID, lngID);
             titleET.setText(getIntent().getStringExtra("note_name"));
             detailET.setText(getIntent().getStringExtra("note_detail"));
+            onCreateDateShow.setText("Create On : " + getIntent().getStringExtra("note_created_date"));
 
             recordFile = getIntent().getStringExtra("note_audio_path");
             if(recordFile != null){
@@ -261,6 +268,7 @@ public class NoteDetailActivity extends AppCompatActivity {
                 imageSet = true;
             }
         }
+
 
 
         /**************Save button click for both add and update**************/
@@ -441,8 +449,6 @@ public class NoteDetailActivity extends AppCompatActivity {
                         }
                     });
             errorDialog.show();
-        } else {
-//            findLocation();
         }
     }
 
@@ -482,7 +488,6 @@ public class NoteDetailActivity extends AppCompatActivity {
         locationRequest.setSmallestDisplacement(SMALLEST_DISPLACEMENT);
 
         locationCallback = new LocationCallback() {
-
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);

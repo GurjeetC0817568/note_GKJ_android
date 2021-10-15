@@ -51,7 +51,7 @@ public class NoteActivity extends AppCompatActivity {
     private NoteViewModel noteAppViewModel;
     private NoteAdapter noteAdapter;
     private int catId;
-    private String searchKey = "";
+    private String searchKey = "", catNAME;
 
     public static final String CATEGORY_ID = "category_id";
     public static final String CATEGORY_NAME = "category_name";
@@ -73,6 +73,7 @@ public class NoteActivity extends AppCompatActivity {
         //to not change the size of recycler view when change in adapter content
         rcvNotes.setHasFixedSize(true);
         catId = getIntent().getIntExtra(NoteActivity.CATEGORY_ID, 0);
+        catNAME = getIntent().getStringExtra(NoteActivity.CATEGORY_NAME);
 
         //by clicking move to detail activity page
         createNote.setOnClickListener(v -> {
@@ -183,10 +184,20 @@ public class NoteActivity extends AppCompatActivity {
 
                         }else{
                             //if more than 1 categories then update the note's categoryId in note table
+
+                            // firstly display the category for dropdown to move into
+                            catSpinnerArr.clear();
                             selectedCategory = categories;
+                            //catSpinnerArr.add(catNAME);//adding existing category as first category in dropdown
                             for (Category category :categories){
-                                catSpinnerArr.add(category.getCatName());
+                                //if(category.getCatId() == catId){
+                                 // so do nothing here when existing catId matches while fetching categories
+                                //}else {
+                                    catSpinnerArr.add(category.getCatName());
+                                //}
                             }
+
+
                             AlertDialog.Builder builder = new AlertDialog.Builder(NoteActivity.this);
                             LayoutInflater layoutInflater = LayoutInflater.from(NoteActivity.this);
                             View view = layoutInflater.inflate(R.layout.dialog_move_note_category, null);
@@ -220,22 +231,7 @@ public class NoteActivity extends AppCompatActivity {
         }
 
 
-        /*
-        // not working due to old version of swipe api so images are not showing
-      @Override
-        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView
-                recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY,
-                                int actionState, boolean isCurrentlyActive) {
-            new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-                    .setIconHorizontalMargin(1, 1)
-                    .addSwipeLeftActionIcon(R.drawable.delete)
-                    .addSwipeRightActionIcon(R.drawable.move)
-                    .create()
-                    .decorate();
-            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-        }*/
-
-
+        //showing "Delete" text when swipe left to delete and "Move" text when swipe right to move to category
         @Override
         public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView
                 recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY,
@@ -331,6 +327,8 @@ public class NoteActivity extends AppCompatActivity {
                         intent.putExtra("note_audio_path", note.getNoteRecordingPath());
                         intent.putExtra("note_longitude", note.getNoteLongitude());
                         intent.putExtra("note_latitude", note.getNoteLatitude());
+                        intent.putExtra("note_created_date", note.getNoteDate());
+                       // intent.putExtra("category_name", categoryName);
 
                         startActivity(intent);
                     }
