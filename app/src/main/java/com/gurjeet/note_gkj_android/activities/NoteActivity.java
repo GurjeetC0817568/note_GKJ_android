@@ -39,22 +39,21 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 public class NoteActivity extends AppCompatActivity {
 
+    //All variables set
     ImageView createNote, goBack;
     RecyclerView rcvNotes;
     TextView sortAZ, sortZA, sortDate;
     SearchView searchView;
-
     ArrayList<Note> noteList = new ArrayList<>();
     List<Category> selectedCategory = new ArrayList<>();
     List<String> catSpinnerArr= new ArrayList<>();
-
     private NoteViewModel noteAppViewModel;
     private NoteAdapter noteAdapter;
     private int catId;
     private String searchKey = "", catNAME;
-
     public static final String CATEGORY_ID = "category_id";
     public static final String CATEGORY_NAME = "category_name";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +61,8 @@ public class NoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_note);
 
         //All variables assigning
+        catId = getIntent().getIntExtra(NoteActivity.CATEGORY_ID, 0);
+        catNAME = getIntent().getStringExtra(NoteActivity.CATEGORY_NAME);
         sortAZ = findViewById(R.id.sortAZ);
         sortZA = findViewById(R.id.sortZA);
         sortDate = findViewById(R.id.sortDate);
@@ -70,10 +71,6 @@ public class NoteActivity extends AppCompatActivity {
         rcvNotes = findViewById(R.id.rcvNotes);
         goBack = findViewById(R.id.imgBack);
 
-        //to not change the size of recycler view when change in adapter content
-        rcvNotes.setHasFixedSize(true);
-        catId = getIntent().getIntExtra(NoteActivity.CATEGORY_ID, 0);
-        catNAME = getIntent().getStringExtra(NoteActivity.CATEGORY_NAME);
 
         //by clicking move to detail activity page
         createNote.setOnClickListener(v -> {

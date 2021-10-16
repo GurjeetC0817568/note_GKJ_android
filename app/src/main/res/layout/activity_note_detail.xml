@@ -132,8 +132,9 @@
 
     <TextView
         android:id="@+id/locationDetailsTV"
-        android:layout_width="284dp"
-        android:layout_height="54dp"
+        android:layout_width="366dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="30dp"
         android:gravity="center"
@@ -141,14 +142,15 @@
         android:textColor="#7C4605"
         android:textStyle="bold|italic"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/audioBannerV" />
 
     <TextView
         android:id="@+id/saveTV"
         android:layout_width="108dp"
         android:layout_height="32dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="72dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="8dp"
         android:background="#7C4605"
         android:text="Save Note"
         android:textAlignment="center"
@@ -156,18 +158,7 @@
         android:textSize="20dp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/mapIcon" />
-
-    <ImageView
-        android:id="@+id/mapIcon"
-        android:layout_width="55dp"
-        android:layout_height="58dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="12dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/audioBannerV"
-        app:srcCompat="@drawable/map"
-        app:tint="#7C4605" />
+        app:layout_constraintTop_toBottomOf="@+id/locationDetailsTV" />
 
     <TextView
         android:id="@+id/onCreateDateShow"

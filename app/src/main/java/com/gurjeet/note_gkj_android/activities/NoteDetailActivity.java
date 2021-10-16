@@ -70,22 +70,11 @@ import java.util.UUID;
 
 public class NoteDetailActivity extends AppCompatActivity {
 
-    private static final int REQUEST_CODE = 1;
-    public static final int READ_EXTERNAL_STORAGE_CODE = 2;
-
-    private FusedLocationProviderClient fusedLocationProviderClient;
-    private LocationRequest locationRequest;
-    private LocationCallback locationCallback;
-    Geocoder geocoder;
-    LatLng latLangNote = null;
-
-    private NoteViewModel noteAppViewModel;
-    ArrayList<Note> noteList = new ArrayList<>();
-
-    //variables set
+    //All variables set
+    String noteName,noteDetail,noteDate;
     ImageButton btnPlay, btnRecord;
     TextView locationDetailsTV,saveTV,onCreateDateShow;
-    ImageView btnBack, uploadImage, mapIcon;
+    ImageView btnBack, uploadImage;
     View audioBannerV;
     EditText titleET, detailET;
     AudioManager audioManager;
@@ -96,14 +85,19 @@ public class NoteDetailActivity extends AppCompatActivity {
     private double latID = 0 ,lngID = 0;
     String pathSave = "", recordFile = null;
     Boolean isRecording = false, isPlaying = false, imageSet = false;
-
     ActivityResultLauncher<Intent> myActivityResultLauncher;
-
-
+    private static final int REQUEST_CODE = 1;
+    public static final int READ_EXTERNAL_STORAGE_CODE = 2;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private LocationRequest locationRequest;
+    private LocationCallback locationCallback;
+    Geocoder geocoder;
+    LatLng latLangNote = null;
+    private NoteViewModel noteAppViewModel;
+    ArrayList<Note> noteList = new ArrayList<>();
     private static final int FASTEST_INTERVAL = 1000; // 1 seconds
     private static final int UPDATE_INTERVAL = 5000; // 5 seconds
     private static final int SMALLEST_DISPLACEMENT = 200; // 200 meters
-
     private List<String> permissionsToRequest;
     private List<String> permissions = new ArrayList<>();
     private List<String> permissionsRejected = new ArrayList<>();
@@ -128,16 +122,12 @@ public class NoteDetailActivity extends AppCompatActivity {
         audioBannerV = findViewById(R.id.audioBannerV);
         scrubber = findViewById(R.id.scrubber);
         locationDetailsTV = findViewById(R.id.locationDetailsTV);
-        mapIcon = findViewById(R.id.mapIcon);
         onCreateDateShow = findViewById(R.id.onCreateDateShow);
 
         // when back button click then go back
         btnBack.setOnClickListener(v -> {
             finish();
         });
-
-
-
 
 
         /*****************Start upload image click*********************/
@@ -153,9 +143,6 @@ public class NoteDetailActivity extends AppCompatActivity {
         });
 
 
-
-
-
         /**************when record button clicked**************/
         //Reference: https://stackoverflow.com/questions/37338606/mediarecorder-not-saving-audio-to-file
         btnRecord.setOnClickListener(v -> {
@@ -163,7 +150,12 @@ public class NoteDetailActivity extends AppCompatActivity {
                 if (hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) && hasPermission(Manifest.permission.RECORD_AUDIO)) {
                     recordFile = "/" + UUID.randomUUID().toString() + ".3gp";
                     pathSave = getExternalCacheDir().getAbsolutePath()  + recordFile ;
-                    setUpMediaRecorder();
+                    //Reference:https://stackoverflow.com/questions/58311691/the-android-app-crashes-after-6-seconds-when-i-press-record-button
+                    mediaRecorder = new MediaRecorder();
+                    mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+                    mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+                    mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+                    mediaRecorder.setOutputFile(pathSave);
 
                     try {
                         mediaRecorder.prepare();
@@ -190,10 +182,6 @@ public class NoteDetailActivity extends AppCompatActivity {
         });
 
 
-
-
-
-
         /**************audio clicked for play icons**************/
         //Reference:https://www.tutlane.com/tutorial/android/android-audio-media-player-with-examples
         btnPlay.setVisibility(View.GONE);
@@ -217,9 +205,7 @@ public class NoteDetailActivity extends AppCompatActivity {
                     mediaPlayer.start();
                     audioBannerV.setBackgroundColor(Color.parseColor("#450C0C0C"));
                     btnPlay.setImageResource(R.drawable.pause);
-
                     Toast.makeText(NoteDetailActivity.this, "Playing...", Toast.LENGTH_SHORT).show();
-
                     mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
                         public void onCompletion(MediaPlayer mp) {
@@ -241,7 +227,10 @@ public class NoteDetailActivity extends AppCompatActivity {
         });
 
 
-
+        //intent variable assigned
+        noteName = getIntent().getStringExtra("note_name");
+        noteDetail = getIntent().getStringExtra("note_detail");
+        noteDate = "Created On : " + getIntent().getStringExtra("note_created_date");
         catID = getIntent().getIntExtra(NoteActivity.CATEGORY_ID, 0);
         noteId = getIntent().getIntExtra("note_id", -1) ;
         latID = getIntent().getDoubleExtra("note_latitude" , 0);
@@ -250,9 +239,9 @@ public class NoteDetailActivity extends AppCompatActivity {
         //when update, display note,detail,recorded file,image from previous page using intent
         if(noteId  > 0){
             latLangNote = new LatLng(latID, lngID);
-            titleET.setText(getIntent().getStringExtra("note_name"));
-            detailET.setText(getIntent().getStringExtra("note_detail"));
-            onCreateDateShow.setText("Created On : " + getIntent().getStringExtra("note_created_date"));
+            titleET.setText(noteName);
+            detailET.setText(noteDetail);
+            onCreateDateShow.setText(noteDate);
 
             recordFile = getIntent().getStringExtra("note_audio_path");
             if(recordFile != null){
@@ -364,9 +353,7 @@ public class NoteDetailActivity extends AppCompatActivity {
         // set the audio volume using streamVolume
         audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
-
         noteAppViewModel = new ViewModelProvider.AndroidViewModelFactory(this.getApplication()).create(NoteViewModel.class);
-
         // Reference:https://stackoverflow.com/questions/62613424/java-solution-for-startactivityforresultintent-int-in-fragment-has-been-depre
         myActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -384,12 +371,10 @@ public class NoteDetailActivity extends AppCompatActivity {
 
         // set location initializer
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
         // added permissions
         permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         permissions.add(Manifest.permission.RECORD_AUDIO);
         permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
-
         permissionsToRequest = permissionsToRequest(permissions);
         if (permissionsToRequest.size() > 0)
             requestPermissions(permissionsToRequest.toArray(new String[permissionsToRequest.size()]), REQUEST_CODE);
@@ -407,19 +392,6 @@ public class NoteDetailActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        /**************mapIcon click to show map activity**************/
-        mapIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(NoteDetailActivity.this, MapsActivity.class);
-                intent.putExtra("note_longitude", latLangNote.longitude);
-                intent.putExtra("note_latitude",  latLangNote.latitude);
-                startActivity(intent);
-            }
-        });
-
-
 
     }
     /********************ON CREATE FUNCTIONS ENDS HERE*******************/
@@ -452,15 +424,7 @@ public class NoteDetailActivity extends AppCompatActivity {
         }
     }
 
-    //problem solved using reference:https://stackoverflow.com/questions/58311691/the-android-app-crashes-after-6-seconds-when-i-press-record-button
-    private void setUpMediaRecorder() {
-        mediaRecorder = new MediaRecorder();
-        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
-        mediaRecorder.setOutputFile(pathSave);
 
-    }
 
 
     /************** Start location related methods **************************/

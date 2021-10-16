@@ -38,18 +38,21 @@ public class CategoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category);
 
+        //variables assign
+        createCategory = findViewById(R.id.createCategory);
+        rcvCategories = findViewById(R.id.rcvCategories);
+
         noteViewModel = new ViewModelProvider.AndroidViewModelFactory(this.getApplication())
                 .create(NoteViewModel.class);
 
         noteViewModel.getAllCategories().observe(this, categories -> {
             categoryList.clear();
             categoryList.addAll(categories);
-            rcvCategories = findViewById(R.id.rcvCategories);
             rcvCategories.setLayoutManager(new GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false));
             rcvCategories.setAdapter(new CategoryAdapter(this, categoryList));
         });
 
-        createCategory = findViewById(R.id.createCategory);
+
         createCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,10 +75,6 @@ public class CategoryActivity extends AppCompatActivity {
                             alertBox("Enter Category name");
                             return;
                         }
-                       /* if (categoryList.contains(categoryName)) {
-                            alertBox("Category name already exist!");
-                            return;
-                        }*/
 
                         noteViewModel.insertCategory(new Category(categoryName));
                         alertDialog.dismiss();
